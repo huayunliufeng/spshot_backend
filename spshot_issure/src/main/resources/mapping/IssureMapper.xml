@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.zq.spshot.issure.mapper.IssureDao">
+
+    <select id="findById" resultType="issure" parameterType="int">
+        select * from vt_issure where id=#{id} and isdel='0'
+    </select>
+
+    <select id="findIssureByKeyWord" resultType="issure">
+        select * from vt_issure where
+        <if test="param1!=null and param1!=''">(title like '${param1}%' or username like '${param1}%' or partcode=#{param1}) and </if>
+        state=#{param2} and isdel='0' order by createtime desc
+    </select>
+
+    <select id="findPublicAndAccessIssure" parameterType="string" resultType="issure">
+        select * from vt_issure where
+        <if test="value!=null and value!=''">(title like '${value}%' or partcode=#{value}) </if>
+        and isdel='0' and state=1 and ispublic='1' and isexpire='0' order by accepttime desc
+    </select>
+
+    <select id="findIsNotPublic" parameterType="string" resultType="issure">
+        select * from vt_issure where
+        <if test="value!=null and value!=''">(title like '${value}%' or partcode=#{value}) </if>
+        and isdel='0' and state=1 and isexpire='0' order by accepttime desc
+    </select>
+
+
+    <select id="findIssureByKeyWordOP" resultType="issure">
+        select * from vt_issure where
+        <if test="param1!=null and param1!=''">(title like '${param1}%' or username like '${param1}%' or partcode=#{param1}) and </if>
+        state=#{param2} and adminid=#{param3} and isdel='0' order by createtime desc
+    </select>
+
+    <select id="findIssureByKeyWordOngoing" resultType="issure">
+        select * from vt_issure where
+        <if test="param1!=null and param1!=''">(title like '${param1}%' or username like '${param1}%' or partcode = #{param1}) and </if>
+        state=#{param2} and isdel='0' and isexpire=#{param3} order by accepttime desc
+    </select>
+
+    <insert id="add" parameterType="issure">
+        insert into vt_issure(userid, username, title, createtime, effecttime, maxperson, currperson, partpass, ispublic, isanony, adminid, state, isexpire, isdel) values
+        (#{userid},#{username},#{title},#{createtime},#{effecttime},#{maxperson},0,#{partpass},#{ispublic},#{isanony},#{adminid},0,0,'0')
+        <selectKey resultType="int" keyColumn="id" keyProperty="id" order="AFTER">
+            select last_insert_id()
+        </selectKey>
+    </insert>
+
+    <insert id="addIssureItem">
+        insert into vt_issureitem(issureid, itemid) values(#{issureid},#{itemid})
+    </insert>
+
+    <insert id="addPart" parameterType="map">
+        insert into vt_part(userid, issureid, parttime, isdel) values(#{userid},#{issureid},#{parttime},'0')
+    </insert>
+
+    <insert id="addVerify" parameterType="map">
+        insert into vt_verify (adminid, issureid, loginname, username, title, reason, accepttime, state, isdel)
+        values (#{adminid},#{issureid},#{loginname},#{username},#{title},#{reason},#{accepttime},#{state},'0')
+    </insert>
+
+    <update id="update" parameterType="issure">
+        update vt_issure set title=#{title},effecttime=#{effecttime},maxperson=#{maxperson},partpass=#{partpass},ispublic=#{ispublic},isanony=#{isanony} where id=#{id}
+    </update>
+
+    <update id="delete" parameterType="int">
+        update vt_issure set isdel='1' where id=#{id}
+    </update>
+
+    <select id="findVerifyByKeyword" parameterType="string" resultType="map">
+        select * from vt_verify where (title like '${value}%' or username like '${value}%') and isdel='0' order by accepttime desc
+    </select>
+
+    <select id="findUnVerifyCount" parameterType="int" resultType="int">
+        select count(*) from vt_issure where adminid=#{adminid} and state=0 and isdel='0'
+    </select>
+
+    <select id="findIssureItems" resultType="int" parameterType="int">
+        select itemid from vt_issureitem where issureid=#{issureid}
+    </select>
+
+    <update id="changState">
+        update vt_issure set state=#{param2} where id=#{param1}
+    </update>
+
+    <update id="setPartCode">
+        update vt_issure set partcode=#{param2} where id=#{param1}
+    </update>
+
+    <update id="setAccepttime">
+        update vt_issure set accepttime=#{param2} where id=#{param1}
+    </update>
+
+    <update id="setTodayNum" parameterType="int">
+        update vt_user set todaynum=todaynum-1 where id=#{id} and isdel='0'
+    </update>
+
+    <update id="recTodayNum">
+        update vt_user set todaynum=3 where isdel='0'
+    </update>
+
+    <update id="setTotalIssure" parameterType="int">
+        update vt_user set totalissure=totalissure+1 where id=#{id} and isdel='0'
+    </update>
+
+    <update id="setTotalPart" parameterType="int">
+        update vt_user set totalpart=totalpart+1 where id=#{id} and isdel='0'
+    </update>
+
+    <select id="getHotIssure" resultType="map">
+        select id,username,title,currperson from vt_issure where isdel='0' order by currperson desc limit 3
+    </select>
+
+    <update id="setIssureExpire" parameterType="int">
+        update vt_issure set isexpire='1' where id=#{id} and isdel='0'
+    </update>
+
+    <select id="getUserIdFromPart" parameterType="int" resultType="int">
+        select userid from vt_part where issureid=#{issureid} and isdel='0'
+    </select>
+
+    <select id="getUserIdFromIssure" parameterType="int" resultType="int">
+        select userid from vt_issure where id=#{id} and isdel='0'
+    </select>
+
+    <select id="getOpenId" resultType="string" parameterType="int">
+        select openid from vt_user where id=#{id} and isdel='0'
+    </select>
+
+    <select id="getIssureType" resultType="issure">
+        select id,title,username,createtime,accepttime,effecttime,currperson,maxperson,partcode,ispublic,isanony from vt_issure where
+        <if test="param3!=null and param3!=''">(title like '${param3}%' or partcode = #{param3}) and</if>
+        state=#{param2} and isdel='0' and userid=#{param1} order by createtime desc
+    </select>
+
+    <select id="getUserPart" parameterType="int" resultType="int">
+        select issureid from vt_part where userid=#{userid} and isdel='0'
+    </select>
+
+    <select id="findUserPartIssureByType" resultType="issure">
+        select id,title,username,createtime,accepttime,effecttime,currperson,maxperson,partcode,ispublic,isanony from vt_issure where id in
+        (<foreach collection="param1" separator="," item="item">
+                #{item}
+            </foreach>) and
+        <if test="param3!=null and param3!=''">(title like '${param3}%' or partcode = #{param3}) and</if>
+        isexpire=#{param2} and isdel='0' order by accepttime desc
+    </select>
+
+    <select id="getOpenIdByIssureId" parameterType="int" resultType="string">
+        select openid from vt_user where id = (select userid from vt_issure where id=#{issureid})
+    </select>
+
+    <update id="setCurrPerson" parameterType="int">
+        update vt_issure set currperson=currperson+1 where id=#{id} and isdel='0' and state=1
+    </update>
+
+    <select id="getIssureCurrPerson" parameterType="int" resultType="int">
+        select currperson from vt_issure where id=#{issureid} and isdel='0'
+    </select>
+</mapper>

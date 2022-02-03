@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.zq.spshot.user.mapper.AdminDao">
+
+    <select id="findById" resultType="admin" parameterType="int">
+        select * from vt_admin where id=#{id} and isdel='0'
+    </select>
+
+    <select id="findAllAdmin" resultType="user">
+        select * from vt_admin where isdel='0'
+    </select>
+
+    <insert id="add" parameterType="admin">
+        insert into vt_admin(loginname,password,state,isdel) values(#{loginname},#{password},0,'0')
+        <selectKey resultType="int" keyColumn="id" keyProperty="id" order="AFTER">
+            select last_insert_id()
+        </selectKey>
+    </insert>
+
+    <update id="update" parameterType="admin">
+        update vt_admin set
+        loginname=#{loginname},
+        password=#{password}
+        where id=#{id}
+    </update>
+
+    <update id="delete" parameterType="int">
+        update vt_admin set isdel='1' where id=#{id}
+    </update>
+
+    <update id="disAdmin" parameterType="int">
+        update vt_admin set state=1 where id=#{id}
+    </update>
+
+    <update id="recAdmin" parameterType="int">
+        update vt_admin set state=0 where id=#{id}
+    </update>
+
+    <insert id="insertAdminRole">
+        insert into vt_roleadmin values
+        <foreach collection="param2" item="item" separator=",">
+            (#{param1},#{item})
+        </foreach>
+    </insert>
+
+    <delete id="deleteAdminRoles" parameterType="int">
+        delete from vt_roleadmin where adminid=#{adminid}
+    </delete>
+
+    <select id="findAdminByLoginname" resultType="admin" parameterType="string">
+        select * from vt_admin where loginname=#{loginname} and isdel='0'
+    </select>
+
+    <select id="findByKeyWord" resultType="admin" parameterType="string">
+        select * from vt_admin where (loginname like '${value}%') and isdel='0'
+    </select>
+
+    <select id="findAdminRoles" resultType="int" parameterType="int">
+        select roleid from vt_roleadmin where adminid=#{adminid}
+    </select>
+
+    <select id="findMenuRole" resultType="int" parameterType="int">
+        select menuid from vt_rolemenu where roleid=#{roleid}
+    </select>
+
+    <select id="findMenu" resultType="menu">
+        select distinct id,path,title,icon from vt_menu where id in (
+        <foreach collection="param1" item="item" separator=",">
+            #{item}
+        </foreach>)
+        and parentid=#{param2}
+    </select>
+
+    <select id="getMenuPath" resultType="string">
+        select path from vt_menu where id in (
+            <foreach collection="menuIds" item="item" separator=",">
+                #{item}
+            </foreach>)
+    </select>
+
+
+</mapper>

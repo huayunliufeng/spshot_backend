@@ -1,0 +1,68 @@
+server:
+  port: 30002
+spring:
+  application:
+    name: spshot-issure
+  data:
+    mongodb:
+      authentication-database: admin
+      host: localhost
+      database: spshot
+      username: xxxx
+      password: xxxx
+      port: 27017
+  redis:
+    host: localhost
+  datasource:
+    username: xxxx
+    password: xxxx
+    url: jdbc:mysql://localhost:3306/spshot?serverTimezone=GMT%2B8&characterEncoding=utf-8&useSSL=false&useUnicode=true&allowMultiQueries=true&allowPublicKeyRetrieval=true
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      maximum-pool-size: 5
+      minimum-idle: 2
+      idle-timeout: 2000
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:10086/eureka
+  instance:
+    instance-id: ${spring.application.name}:${server.port}
+    prefer-ip-address: true
+    ip-address: localhost
+jwt:
+  config:
+    key: xxxx
+    ttl: 72000000
+ribbon:
+  eager-load:
+    enabled: true
+  ConnectTimeout: 60000 # 连接超时时间(ms)
+  ReadTimeout: 60000 # 通信超时时间(ms)
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMillisecond: 60000 # 熔断超时时长：60000ms
+ftp:
+  config:
+    host: xxxx
+    port: 21
+    username: xxxx
+    password: xxxx
+weixin:
+  config:
+    appid: xxxx
+    secret: xxxx
+mybatis:
+  #xml映射文件位置
+  mapper-locations: classpath:mapping/*.xml
+  #批量设置别名，需指定pojo位置
+  type-aliases-package: cn.zq.spshot.issure.pojo
+#显示sql语句
+logging:
+  level:
+    #指定dao层所在包
+    cn.zq.spshot.issure.mapper: debug

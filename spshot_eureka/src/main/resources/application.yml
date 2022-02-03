@@ -1,0 +1,14 @@
+server:
+  port: 10086
+spring:
+  application:
+    name: spshot-eureka
+eureka:
+  server:
+    # 关闭自我保护
+    enable-self-preservation: false
+  client:
+    register-with-eureka: false #是否将自己注册到Eureka服务中，本身就是所以无需注册
+    fetch-registry: false #是否从Eureka中获取注册信息
+    service-url:
+      defzultZone: http://localhost:10086/eureka

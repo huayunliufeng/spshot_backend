@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.zq.spshot.data.mapper.ChartDao">
+
+    <select id="getUserData" resultType="int">
+        select count(*) from vt_user where year(registime)=#{param1} and month(registime)=#{param2} and isdel='0'
+    </select>
+
+    <select id="getFeedbackData" resultType="int">
+        select count(*) from vt_feedback where year(createtime)=#{param1} and month(createtime)=#{param2} and isdel='0'
+    </select>
+
+    <select id="getIssureData" resultType="int">
+        select count(*) from vt_issure where year(createtime)=#{param1} and month(createtime)=#{param2} and isdel='0'
+    </select>
+
+    <select id="getPassData" resultType="int">
+        select count(*) from vt_issure where year(createtime)=#{param1} and month(createtime)=#{param2} and isdel='0' and state=1
+    </select>
+
+    <select id="getPartData" resultType="int">
+        select count(*) from vt_part where year(parttime)=#{param1} and month(parttime)=#{param2} and isdel='0'
+    </select>
+</mapper>

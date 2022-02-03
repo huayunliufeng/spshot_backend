@@ -1,0 +1,21 @@
+server:
+  port: 12000
+spring:
+  application:
+    name: spshot-config
+  rabbitmq:
+    host: localhost
+    username: xxxx
+    password: xxxx
+  cloud:
+    config:
+      server:
+        git:
+          uri: https://gitee.com/hylf/spshot_config.git
+          username: xxxx
+          password: xxxx
+management:
+  endpoints:
+    web:
+      exposure:
+        include: bus-refresh

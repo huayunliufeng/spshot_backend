@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.zq.spshot.user.mapper.PermissionDao">
+
+    <select id="findAllPermission" resultType="permission">
+        select * from vt_permissions where isdel='0'
+    </select>
+
+    <select id="findPermissionById" resultType="permission" parameterType="int">
+        select * from vt_permissions where id=#{id} and isdel='0'
+    </select>
+</mapper>

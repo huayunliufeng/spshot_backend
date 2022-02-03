@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.zq.spshot.user.mapper.RoleDao">
+
+    <select id="findById" resultType="role" parameterType="int">
+        select * from vt_role where id=#{id} and isdel='0'
+    </select>
+
+    <select id="findAllRole" resultType="role">
+        select * from vt_role where isdel='0' and state=0 and isdel='0'
+    </select>
+
+    <insert id="add" parameterType="role">
+        insert into vt_role(`name`, keyword, descr, state, isdel) values(#{name},#{keyword},#{descr},0,'0')
+        <selectKey resultType="int" keyColumn="id" keyProperty="id" order="AFTER">
+            select last_insert_id()
+        </selectKey>
+    </insert>
+
+    <update id="update" parameterType="role">
+        update vt_role set `name`=#{name},keyword=#{keyword},descr=#{descr} where id=#{id}
+    </update>
+
+    <update id="delete" parameterType="int">
+        update vt_role set isdel='1' where id=#{id}
+    </update>
+
+    <update id="disRole" parameterType="int">
+        update vt_role set state=1 where id=#{id}
+    </update>
+
+    <update id="recRole" parameterType="int">
+        update vt_role set state=0 where id=#{id}
+    </update>
+
+    <insert id="insertRolePermiss">
+        insert into vt_rolepermiss values
+        <foreach collection="param2" item="item" separator=",">
+            (#{param1},#{item})
+        </foreach>
+    </insert>
+
+    <delete id="deleteRolePermiss" parameterType="int">
+        delete from vt_rolepermiss where roleid=#{roleid}
+    </delete>
+
+    <select id="findRoleByKeyWord" parameterType="string" resultType="role">
+        select * from vt_role where (`name` like '${value}%' or keyword like '${value}%') and isdel='0'
+    </select>
+
+    <select id="findRolePermissionIds" resultType="int" parameterType="int">
+        select permissionsid from vt_rolepermiss where roleid=#{roleid}
+    </select>
+</mapper>

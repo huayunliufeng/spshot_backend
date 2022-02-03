@@ -1,0 +1,44 @@
+server:
+  port: 10010
+spring:
+  application:
+    name: spshot-manager
+  rabbitmq:
+    host: xxxx
+    username: xxxx
+    password: xxxx
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:10086/eureka
+  instance:
+    instance-id: ${spring.application.name}:${server.port}
+    prefer-ip-address: true
+    ip-address: localhost
+zuul:
+  ignored-services: "*"
+  routes:
+    spshot-user: /user/**
+    spshot-issure: /issure/**
+    spshot-data: /data/**
+    spshot-quartz: /quartz/**
+      #   sensitive-headers: [Cookie,Authorization,Set-Cookie]
+ribbon:
+  eager-load:
+    enabled: true
+  ConnectTimeout: 60000 # 连接超时时间(ms)
+  ReadTimeout: 60000 # 通信超时时间(ms)
+  OkToRertryOnAllOperations: ture # 是否对所有操作重试
+  MaxAutoRetriesNextServer: 1 #同一个服务不同实例的重试次数
+  MaxAutoRetries: 1 #同一实例的重试次数
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMillisecond: 60000 # 熔断超时时长：60000ms
+jwt:
+  config:
+    key: xxxx
+    ttl: 72000000

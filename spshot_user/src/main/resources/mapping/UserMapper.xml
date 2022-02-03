@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.zq.spshot.user.mapper.UserDao">
+
+    <select id="findById" resultType="user" parameterType="int">
+        select * from vt_user where id=#{id} and isdel='0'
+    </select>
+
+    <select id="findByOpenId" parameterType="string" resultType="user">
+        select * from vt_user where openid=#{openId} and isdel='0'
+    </select>
+
+    <select id="findUserByKeyWord" parameterType="string" resultType="user">
+        select * from vt_user where
+        <if test="value!=null and value!=''"> (username like '${value}%') and</if>
+        isdel='0' order by registime desc
+    </select>
+
+    <insert id="add" parameterType="user">
+        insert into vt_user(username,avatarUrl, openid,registime, todaynum, totalissure, totalpart, state, isdel) values
+        (#{username},#{avatarUrl},#{openid},#{registime},3,0,0,0,'0')
+        <selectKey resultType="int" keyColumn="id" keyProperty="id" order="AFTER">
+            select last_insert_id()
+        </selectKey>
+    </insert>
+
+    <update id="update" parameterType="user">
+        update vt_user set username=#{username},avatarUrl=#{avatarUrl} where id=#{id} and isdel='0'
+    </update>
+
+    <update id="delete" parameterType="int">
+        update vt_user set isdel='1' where id=#{id}
+    </update>
+
+    <select id="findUserByUsername" parameterType="string" resultType="User">
+        select * from vt_user where username=#{value} and isdel='0'
+    </select>
+
+    <update id="changeState">
+        update vt_user set state=#{param2} where id=#{param1}
+    </update>
+
+    <select id="getUserOpenId" resultType="string" parameterType="int">
+        select openid from vt_user where id=#{id} and isdel='0'
+    </select>
+
+</mapper>

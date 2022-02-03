@@ -1,0 +1,13 @@
+spring:
+  cloud:
+    config:
+      label: master
+      name: data
+      profile: dev
+      uri: http://localhost:12000
+      fail-fast: true #在获取不到远程配置时，立即失败，但是用下边的配置进行重试。
+      retry:
+        initial-interval: 1000 #最初重试间隔为 1000 毫秒
+        max-interval: 2000 #最长重试间隔为 2000 毫秒
+        max-attempts: 10 #最多重试 10 次
+        multiplier: 1.1 #每次重试失败后，重试间隔所增加的倍数

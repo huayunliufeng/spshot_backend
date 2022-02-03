@@ -1,0 +1,21 @@
+server:
+  port: 8080
+spring:
+  application:
+    name: spshot-test
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:10086/eureka
+ribbon:
+  eager-load:
+    enabled: true
+  ConnectTimeout: 60000 # 连接超时时间(ms)
+  ReadTimeout: 60000 # 通信超时时间(ms)
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMillisecond: 60000 # 熔断超时时长：60000ms

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.zq.spshot.issure.mapper.ItemsDao">
+
+    <select id="findById" parameterType="int" resultType="items">
+        select * from vt_items where id=#{id}
+    </select>
+
+    <select id="findAllItems" resultType="items">
+        select * from vt_items
+    </select>
+
+    <insert id="add" parameterType="items">
+        insert into vt_items(question, optional) values (#{question},#{optional})
+        <selectKey resultType="int" keyColumn="id" keyProperty="id" order="AFTER">
+            select last_insert_id()
+        </selectKey>
+    </insert>
+
+    <update id="update" parameterType="items">
+        update vt_items set question=#{question},optional=#{optional} where id=#{id}
+    </update>
+
+    <delete id="delete" parameterType="int">
+        delete from vt_items where id=#{id}
+    </delete>
+</mapper>

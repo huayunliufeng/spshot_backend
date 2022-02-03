@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.zq.spshot.data.mapper.FeedBackDao">
+
+    <select id="findById" parameterType="int" resultType="feedBack">
+      select * from vt_feedback where id=#{id} and isdel='0'
+    </select>
+
+    <select id="getDealIsNotRead" resultType="int" parameterType="int">
+        select count(*) from vt_deal where userid=#{userid} and isdel='0' and state=0
+    </select>
+
+    <select id="findAllFeedBack" resultType="feedBack">
+        select * from vt_feedback where
+        <if test="param1!=null and param1!=''">(username like '${param1}%' or title like '${param1}%') and</if>
+        isdel='0' and state=#{param2} order by createtime desc
+    </select>
+
+    <select id="findDealPage" resultType="map">
+        select f.id,d.username,d.dealtime,d.adminname,d.adminid,d.result,d.state,f.createtime,f.title from vt_deal d,vt_feedback f where
+        <if test="value!=null and value!=''">(f.username like '${value}%' or f.title like '${value}%') and</if>
+        d.fbid=f.id and d.isdel='0' and f.state=1 and f.isdel='0' order by d.dealtime desc
+    </select>
+
+    <select id="findUserMessage" resultType="map">
+        select f.id,f.title,d.adminname,d.dealtime,d.result,d.state from vt_feedback f,vt_deal d where
+        d.fbid=f.id and f.userid=#{userid} and d.isdel='0' and f.state=1 and f.isdel='0' order by d.dealtime desc
+    </select>
+
+    <select id="findDealById" resultType="map">
+        select f.id,f.title,d.adminname,d.username,f.createtime,f.details,d.dealtime,d.result,d.state from vt_feedback f,vt_deal d where
+            d.fbid=f.id and f.id=#{id} and d.isdel='0' and f.state=1 and f.isdel='0'
+    </select>
+
+    <insert id="add" parameterType="feedBack">
+        insert into vt_feedback(userid, username, createtime, title, details, state, isdel)
+        values (#{userid},#{username},#{createtime},#{title},#{details},0,'0')
+        <selectKey resultType="int" keyColumn="id" keyProperty="id" order="AFTER">
+            select last_insert_id()
+        </selectKey>
+    </insert>
+
+    <update id="update" parameterType="feedBack">
+        update vt_feedback set title=#{title},details=#{details}
+    </update>
+
+    <update id="delete" parameterType="int">
+        update vt_feedback set isdel='1' where id=#{id}
+    </update>
+
+    <insert id="deal" parameterType="map">
+        insert into vt_deal(adminid, adminname, fbid,userid, username, result, dealtime, state,isdel)
+        values (#{adminid},#{adminname},#{fbid},#{userid},#{username},#{result},#{dealtime},0,'0')
+    </insert>
+
+    <update id="setState" parameterType="int">
+        update vt_feedback set state=1 where id=#{id}
+    </update>
+
+    <select id="countNoDeal" resultType="long">
+        select count(*) from vt_feedback where state=0
+    </select>
+
+    <update id="setIsRead" parameterType="int">
+        update vt_deal set state=1 where fbid=#{fbid} and isdel='0'
+    </update>
+
+
+</mapper>
