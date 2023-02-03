@@ -25,8 +25,6 @@
 
 - 如需查看项目完整开发文档可关注公众号华风部落回复：spshot开发文档。
 
-  ![华风部落公众号](http://hylf.club:8090/images/华风部落.jpg)
-
 - 完整开发文档包含：
   1. 请投意合API(v1.0.6).pdf
   2. 请投意合服务器端(v1.0.6).pdf
@@ -40,12 +38,3 @@
   10. spshot.sql，mysql 数据库文件
   11. spshot_mongo，mongodb 数据库文件。
 
-### 三、项目体验
-
-![小程序二维码](http://hylf.club:8090/images/spshot.jpg)
-
-- [点击进入后端](https://hylf.club:3000)，账号：visitor，密码：visitor1234。
-
-### 四、结语
-
-- 小白作品，广邀指导。
